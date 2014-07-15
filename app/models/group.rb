@@ -57,12 +57,12 @@ class Group < ActiveRecord::Base
   scope :more_than_n_discussions, lambda { |n| where('discussions_count > ?', n) }
   scope :less_than_n_discussions, lambda { |n| where('discussions_count < ?', n) }
 
-  scope :no_active_discussions_since, lambda {|time|
-    includes(:discussions).where('discussions.last_comment_at < ? OR discussions_count = 0', time)
+  scope :no_active_discussions_since, ->(time) {
+    joins(:discussions).where('discussions.last_comment_at < ? OR discussions_count = 0', time)
   }
 
-  scope :active_discussions_since, lambda {|time|
-    includes(:discussions).where('discussions.last_comment_at > ?', time)
+  scope :active_discussions_since, ->(time) {
+    joins(:discussions).where('discussions.last_comment_at > ?', time)
   }
 
   scope :created_earlier_than, lambda {|time| where('groups.created_at < ?', time) }
