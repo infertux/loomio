@@ -57,6 +57,7 @@ gem 'intercom'
 gem 'intercom-rails', '~> 0.2.24'
 gem 'actionpack-page_caching', '~> 1.0.2'
 gem 'actionpack-action_caching', '~> 1.1.1'
+gem 'minitest', '~> 5.4.0'
 
 # Gems used only for assets and not required
 # in production environments by default.

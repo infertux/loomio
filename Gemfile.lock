@@ -611,6 +611,7 @@ DEPENDENCIES
   librato-rails
   memcachier (~> 0.0.2)
   meta_request (~> 0.2.8)
+  minitest (~> 5.4.0)
   modernizr-rails (~> 2.6.2)
   momentjs-rails (~> 2.6.0)
   newrelic_rpm (~> 3.7.3)
