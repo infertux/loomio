@@ -126,8 +126,8 @@ describe DiscussionsController do
     describe "change version" do
       before do
         @version_item = mock_model(Discussion, :title => 'most important discussion', :description => "new version", key: 'abc1234', :save! => true)
-        @version = mock_model(Version, :item => discussion)
-        Version.stub(:find).and_return(@version)
+        @version = mock_model(PaperTrail::Version, :item => discussion)
+        PaperTrail::Version.stub(:find).and_return(@version)
         @version.stub(:reify).and_return(@version_item)
         @version.stub(:save!)
       end

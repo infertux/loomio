@@ -145,7 +145,7 @@ class DiscussionsController < GroupBaseController
   def preview_version
     # assign live item if no version_id is passed
     if params[:version_id].present?
-      version = Version.find(params[:version_id])
+      version = PaperTrail::Version.find(params[:version_id])
       @discussion = version.reify
     end
     @originator = User.find @discussion.originator.to_i
@@ -155,7 +155,7 @@ class DiscussionsController < GroupBaseController
   end
 
   def update_version
-    @version = Version.find(params[:version_id])
+    @version = PaperTrail::Version.find(params[:version_id])
     @version.reify.save!
     redirect_to @version.reify()
   end
