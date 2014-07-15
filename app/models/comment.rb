@@ -18,7 +18,7 @@ class Comment < ActiveRecord::Base
   after_initialize :set_defaults
   after_destroy :send_discussion_comment_deleted!
 
-  default_scope include: [:user, :attachments, :discussion]
+  default_scope { includes(:user).includes(:attachments).includes(:discussion) }
 
   delegate :name, :to => :user, :prefix => :user
   delegate :name, :to => :user, :prefix => :author
