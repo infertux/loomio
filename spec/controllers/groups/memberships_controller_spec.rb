@@ -33,7 +33,7 @@ describe Groups::MembershipsController do
         before do
           @group.add_member!(@new_user)
           @membership = @group.memberships.find_by_user_id(@new_user.id)
-          delete :destroy, :id => @membership.id
+          delete :destroy, :id => @membership.id, :group_id => @group.id
         end
         it { flash[:notice].should =~ /Member removed/ }
         it { response.should redirect_to group_memberships_path(@membership.group)}
