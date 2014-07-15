@@ -187,6 +187,10 @@ class Group < ActiveRecord::Base
     motions.closed
   end
 
+  def motions_count
+    discussions.published.sum :motions_count
+  end
+
   def archive!
     self.discussions.each(&:archive!)
     self.update_attribute(:archived_at, DateTime.now)
@@ -399,7 +403,7 @@ class Group < ActiveRecord::Base
   end
 
   def organisation_motions_count
-    Group.where("parent_id = ? OR (parent_id IS NULL AND id = ?)", parent_or_self.id, parent_or_self.id).sum(:motions_count)
+    Group.where("parent_id = ? OR (parent_id IS NULL AND id = ?)", parent_or_self.id, parent_or_self.id).all.sum(&:motions_count)
   end
 
   def has_subdomain?
