@@ -22,6 +22,8 @@ Loomio::Application.configure do
   config.assets.digest = true
   config.assets.enabled = true
 
+  config.eager_load = true
+
   # Defaults to Rails.root.join("public/assets")
   # config.assets.manifest = YOUR_PATH
 

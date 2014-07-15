@@ -35,6 +35,8 @@ Loomio::Application.configure do
 
   config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
 
+  config.eager_load = false
+
   # Use these settings to send mail from gmail. If you use 2-step authentication on
   # your google account, create a new application-specific password and use it in here
   # http://guides.rubyonrails.org/action_mailer_basics.html#action-mailer-configuration-for-gmail

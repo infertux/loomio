@@ -26,6 +26,8 @@ Loomio::Application.configure do
 
   config.action_controller.action_on_unpermitted_parameters = :raise
 
+  config.eager_load = false
+
   if ENV['TEST_EMAIL'] == 'sendgrid'
     # Send emails using SendGrid
     config.action_mailer.delivery_method = :smtp
