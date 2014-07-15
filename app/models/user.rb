@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
 
 
   has_many :admin_memberships,
-           conditions: 'memberships.admin = TRUE AND memberships.is_suspended = FALSE',
+           -> { where('memberships.admin = TRUE AND memberships.is_suspended = FALSE') },
            class_name: 'Membership',
            dependent: :destroy
 
@@ -50,16 +50,16 @@ class User < ActiveRecord::Base
            source: :group
 
   has_many :memberships,
-           conditions: {is_suspended: false},
+           -> { where is_suspended: false },
            dependent: :destroy
 
   has_many :membership_requests,
            foreign_key: 'requestor_id'
 
   has_many :groups,
-           through: :memberships,
-           conditions: { archived_at: nil }
-
+           -> { where archived_at: nil },
+           through: :memberships
+           
   has_many :discussions,
            through: :groups
 
@@ -97,13 +97,13 @@ class User < ActiveRecord::Base
   before_save :set_avatar_initials, :ensure_unsubscribe_token, :generate_username
   before_create :set_default_avatar_kind
 
-  scope :active, where(deleted_at: nil)
-  scope :inactive, where("deleted_at IS NOT NULL")
-  scope :daily_activity_email_recipients, where(subscribed_to_daily_activity_email: true)
-  scope :subscribed_to_missed_yesterday_email, where(subscribed_to_missed_yesterday_email: true)
-  scope :sorted_by_name, order("lower(name)")
-  scope :admins, where(is_admin: true)
-  scope :coordinators, joins(:memberships).where('memberships.admin = ?', true).group('users.id')
+  scope :active, -> { where(deleted_at: nil) }
+  scope :inactive, -> { where("deleted_at IS NOT NULL") }
+  scope :daily_activity_email_recipients, -> { where(subscribed_to_daily_activity_email: true) }
+  scope :subscribed_to_missed_yesterday_email, -> { where(subscribed_to_missed_yesterday_email: true) }
+  scope :sorted_by_name, -> { order("lower(name)") }
+  scope :admins, -> { where(is_admin: true) }
+  scope :coordinators, -> { joins(:memberships).where('memberships.admin = ?', true).group('users.id') }
 
   def self.email_taken?(email)
     User.find_by_email(email).present?

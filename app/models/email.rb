@@ -2,7 +2,6 @@ class Email < ActiveRecord::Base
   belongs_to :email_template
   belongs_to :recipient, class_name: 'User'
   scope :unsent, -> { where(sent_at: nil) }
-  scope :all, -> { unscoped }
 
   def render_body
     options = {

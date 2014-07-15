@@ -6,13 +6,6 @@ class Group < ActiveRecord::Base
   class MaximumMembershipsExceeded < Exception
   end
 
-  #even though we have permitted_params this needs to be here.. it's an issue
-  attr_accessible :members_can_add_members, :members_can_edit_discussions, :members_can_edit_comments, :motions_can_be_edited,
-                  :name, :parent, :parent_id, :description, :max_size,
-                  :cannot_contribute, :full_name, :payment_plan, :parent_members_can_see_discussions,
-                  :category_id, :max_size, :is_visible_to_parent_members, :is_visible_to_public,
-                  :discussion_privacy_options, :membership_granted_upon, :visible_to,
-                  :theme_id, :subdomain, :cover_photo, :logo
   acts_as_tree
 
   PAYMENT_PLANS = ['pwyc', 'subscription', 'manual_subscription', 'undetermined']
@@ -45,18 +38,18 @@ class Group < ActiveRecord::Base
   scope :archived, lambda { where('archived_at IS NOT NULL') }
   scope :published, lambda { where(archived_at: nil) }
 
-  scope :parents_only, where(parent_id: nil)
+  scope :parents_only, -> { where(parent_id: nil) }
 
-  scope :sort_by_popularity, order('memberships_count DESC')
+  scope :sort_by_popularity, -> { order('memberships_count DESC') }
 
-  scope :visible_to_public, published.where(is_visible_to_public: true)
-  scope :hidden_from_public, published.where(is_visible_to_public: false)
+  scope :visible_to_public, -> { published.where(is_visible_to_public: true) }
+  scope :hidden_from_public, -> { published.where(is_visible_to_public: false) }
 
   scope :visible_on_explore_front_page, -> { visible_to_public.categorised_any.parents_only }
 
   scope :manual_subscription, -> { where(payment_plan: 'manual_subscription') }
 
-  scope :cannot_start_parent_group, where(can_start_group: false)
+  scope :cannot_start_parent_group, -> { where(can_start_group: false) }
 
   # Engagement (Email Template) Related Scopes
   scope :more_than_n_members, lambda { |n| where('memberships_count > ?', n) }
@@ -74,26 +67,26 @@ class Group < ActiveRecord::Base
 
   scope :created_earlier_than, lambda {|time| where('groups.created_at < ?', time) }
 
-  scope :engaged, more_than_n_members(1).
-                  more_than_n_discussions(2).
-                  active_discussions_since(2.month.ago).
-                  parents_only
+  scope :engaged, -> { more_than_n_members(1).
+                       more_than_n_discussions(2).
+                       active_discussions_since(2.month.ago).
+                       parents_only }
 
-  scope :engaged_but_stopped, more_than_n_members(1).
-                              more_than_n_discussions(2).
-                              no_active_discussions_since(2.month.ago).
-                              created_earlier_than(2.months.ago).
-                              parents_only
+  scope :engaged_but_stopped, -> { more_than_n_members(1).
+                                   more_than_n_discussions(2).
+                                   no_active_discussions_since(2.month.ago).
+                                   created_earlier_than(2.months.ago).
+                                   parents_only }
 
-  scope :has_members_but_never_engaged, more_than_n_members(1).
-                                    less_than_n_discussions(2).
-                                    created_earlier_than(1.month.ago).
-                                    parents_only
+  scope :has_members_but_never_engaged, -> { more_than_n_members(1).
+                                             less_than_n_discussions(2).
+                                             created_earlier_than(1.month.ago).
+                                             parents_only }
 
   has_one :group_request
 
   has_many :memberships,
-           conditions: {is_suspended: false},
+           -> { where is_suspended: false },
            dependent: :destroy,
            extend: GroupMemberships
 
@@ -106,12 +99,12 @@ class Group < ActiveRecord::Base
            dependent: :destroy
 
   has_many :pending_membership_requests,
+           -> { where response: nil },
            class_name: 'MembershipRequest',
-           conditions: {response: nil},
            dependent: :destroy
 
   has_many :admin_memberships,
-           conditions: { admin: true },
+           -> { where admin: true },
            class_name: 'Membership',
            dependent: :destroy
 
@@ -119,9 +112,10 @@ class Group < ActiveRecord::Base
            through: :memberships,
            source: :user
 
-  has_many :pending_invitations, as: :invitable,
-           class_name: 'Invitation',
-           conditions: {accepted_at: nil, cancelled_at: nil}
+  has_many :pending_invitations, 
+           -> { where accepted_at: nil, cancelled_at: nil },
+           as: :invitable,
+           class_name: 'Invitation'
 
   after_initialize :set_defaults
 
@@ -136,8 +130,11 @@ class Group < ActiveRecord::Base
   belongs_to :category
   belongs_to :theme
 
-  has_many :subgroups, class_name: 'Group', foreign_key: 'parent_id', conditions: { archived_at: nil }, order: 'name'
-
+  has_many :subgroups, 
+           -> { where(archived_at: nil).order(:name) },
+           class_name: 'Group', 
+           foreign_key: 'parent_id'
+           
   has_one :subscription, dependent: :destroy
 
   delegate :include?, to: :users, prefix: true
