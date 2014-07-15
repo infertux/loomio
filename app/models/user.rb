@@ -207,14 +207,9 @@ class User < ActiveRecord::Base
       update_all(:viewed_at => Time.now)
   end
 
-  def self.loomio_helper_bot
-    helper_bot = User.find_or_create_by_email('contact@loom.io')
-    unless helper_bot.persisted?
-      helper_bot.name = "Loomio Helper Bot"
-      helper_bot.password = SecureRandom.hex
-      helper_bot.save
-    end
-    helper_bot
+  def self.loomio_helper_bot(password: nil)
+    where(email: 'contact@loom.io').first ||
+    create!(email: 'contact@loom.io', name: 'Loomio Helper Bot', password: password || SecureRandom.hex)
   end
 
   def self.helper_bots
