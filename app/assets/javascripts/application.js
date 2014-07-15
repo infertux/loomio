@@ -13,8 +13,6 @@
 //= require jqplot/plugins/pieRenderer
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
-//= require rails.validations
-//= require rails.validations.simple_form
 //= require lib/jquery.cookie.js
 //= require lib/jstz-1.0.4.min
 //= require lib/jquery.mousewheel

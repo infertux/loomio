@@ -106,7 +106,6 @@ GEM
       xpath (~> 2.0)
     childprocess (0.5.3)
       ffi (~> 1.0, >= 1.0.11)
-    client_side_validations (3.2.6)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     closure_tree (4.3.0)
@@ -257,7 +256,7 @@ GEM
       multi_xml (>= 0.5.2)
     httpi (2.2.4)
       rack
-    i18n (0.6.9)
+    i18n (0.6.11)
     inflecto (0.0.2)
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
@@ -275,7 +274,7 @@ GEM
     jquery-rails (3.1.1)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (5.0.0)
+    jquery-ui-rails (4.2.1)
       railties (>= 3.2.16)
     json (1.8.1)
     jwt (1.0.0)
@@ -572,7 +571,6 @@ DEPENDENCIES
   cancancan (~> 1.8)
   capistrano (~> 3.0.0)
   capybara (~> 2.1.0)
-  client_side_validations
   closure_tree (~> 4.3.0)
   codeclimate-test-reporter
   coffee-rails (~> 4.0.1)
@@ -605,7 +603,7 @@ DEPENDENCIES
   jquery-atwho-rails (~> 0.4.7)
   jquery-fileupload-rails (~> 0.4.1)
   jquery-rails (~> 3.1.0)
-  jquery-ui-rails
+  jquery-ui-rails (~> 4.2.1)
   kaminari (~> 0.16.1)
   launchy (~> 2.0.5)
   librato-rails
