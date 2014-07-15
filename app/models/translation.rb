@@ -1,7 +1,5 @@
 class Translation < ActiveRecord::Base
   belongs_to :translatable, polymorphic: true
-
-  serialize :fields, ActiveRecord::Coders::Hstore
   
   scope :to_language, ->(language) { where(language: language) }
 
