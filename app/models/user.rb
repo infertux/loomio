@@ -217,7 +217,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    User.find(:first, :conditions => ["lower(email) = ?", email.downcase])
+    User.where('lower(email) = ?', email.downcase).first
   end
 
   def subgroups
