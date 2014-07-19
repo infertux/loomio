@@ -17,7 +17,7 @@ describe Groups::MembershipsController do
 
       it "can edit a user" do
         membership = @group.add_member!(@new_user)
-        get :edit, :id => membership.id
+        get :edit, :group_id => @group.id, :id => membership.id
       end
 
       it 'can add an admin' do
