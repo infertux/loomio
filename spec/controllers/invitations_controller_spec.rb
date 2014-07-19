@@ -9,6 +9,7 @@ describe InvitationsController do
 
   describe 'destroy' do
     let(:invitation){double(:invitation,
+                            id: 1,
                             recipient_email: 'jim@jam.com',
                             cancel!: true,
                             group: @group)}
