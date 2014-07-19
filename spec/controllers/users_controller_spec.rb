@@ -94,7 +94,7 @@ describe UsersController do
     it "sets flag on user model" do
       user.should_receive(:has_read_system_notice=).with(true)
       user.should_receive(:save!)
-      xhr :post, :dismiss_system_notice
+      xhr :post, :dismiss_system_notice, id: user.id
     end
   end
 end
