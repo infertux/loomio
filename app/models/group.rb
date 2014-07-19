@@ -52,13 +52,13 @@ class Group < ActiveRecord::Base
   scope :cannot_start_parent_group, -> { where(can_start_group: false) }
 
   # Engagement (Email Template) Related Scopes
-  scope :more_than_n_members, lambda { |n| where('memberships_count > ?', n) }
-  scope :less_than_n_members, lambda { |n| where('memberships_count < ?', n) }
-  scope :more_than_n_discussions, lambda { |n| where('discussions_count > ?', n) }
-  scope :less_than_n_discussions, lambda { |n| where('discussions_count < ?', n) }
+  scope :more_than_n_members,     ->(count) { where('memberships_count > ?', count) }
+  scope :less_than_n_members,     ->(count) { where('memberships_count < ?', count) }
+  scope :more_than_n_discussions, ->(count) { where('discussions_count > ?', count) }
+  scope :less_than_n_discussions, ->(count) { where('discussions_count < ?', count) }
 
   scope :no_active_discussions_since, ->(time) {
-    joins(:discussions).where('discussions.last_comment_at < ? OR discussions_count = 0', time)
+    joins(:discussions).where('discussions.last_comment_at < ?', time) | where(discussions_count: 0) 
   }
 
   scope :active_discussions_since, ->(time) {
