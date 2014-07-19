@@ -136,7 +136,7 @@ class User < ActiveRecord::Base
   end
 
   def inbox_groups
-    groups.where('memberships.inbox_position is not null').order(:inbox_position)
+    groups.where('memberships.inbox_position is not null').order('memberships.inbox_position')
   end
 
   def first_name
