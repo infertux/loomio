@@ -93,6 +93,7 @@ describe Discussion do
     before do
       @discussion = create_discussion
       @version_count = @discussion.versions.count
+      PaperTrail.enabled = true
     end
 
     it "doesn't create a new version when unrelevant attribute is edited" do
