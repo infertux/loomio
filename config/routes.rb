@@ -27,6 +27,9 @@ Loomio::Application.routes.draw do
                                     registrations: 'users/registrations',
                                     omniauth_callbacks: 'users/omniauth_callbacks' }
 
+
+  get "/contacts/:importer/callback" => "users/contacts#callback"
+
   namespace :inbox do
     get   '/', action: 'index'
     get   'size'
@@ -176,6 +179,9 @@ Loomio::Application.routes.draw do
 
   scope module: :users do
     match '/profile',          action: 'profile', as: :profile, via: [:get, :post]
+    get 'import_contacts' => 'contacts#import'
+    get 'autocomplete_contacts' => 'contacts#autocomplete'
+
     scope module: :email_preferences do
       get '/email_preferences', action: 'edit',   as: :email_preferences
       put '/email_preferences', action: 'update', as: :update_email_preferences
@@ -189,7 +195,6 @@ Loomio::Application.routes.draw do
   end
 
   match '/announcements/:id/hide', to: 'announcements#hide', as: 'hide_announcement', via: [:get, :post]
-    
   post '/translate/:model/:id', to: 'translations#create', as: :translate
 
   get '/users/invitation/accept' => redirect {|params, request|  "/invitations/#{request.query_string.gsub('invitation_token=','')}"}

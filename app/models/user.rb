@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   validates_attachment :uploaded_avatar,
     size: { in: 0..User::MAX_AVATAR_IMAGE_SIZE_CONST.kilobytes },
     content_type: { content_type: /\Aimage/ },
-    file_name: { matches: [/png\Z/, /jpe?g\Z/, /gif\Z/] }
+    file_name: { matches: [/png\Z/i, /jpe?g\Z/i, /gif\Z/i] }
 
   validates_inclusion_of :avatar_kind, in: AVATAR_KINDS
 
@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
               :default => 'none'
 
 
+  has_many :contacts
   has_many :admin_memberships,
            -> { where('memberships.admin = TRUE AND memberships.is_suspended = FALSE') },
            class_name: 'Membership',
@@ -103,7 +104,6 @@ class User < ActiveRecord::Base
 
   scope :active, -> { where(deleted_at: nil) }
   scope :inactive, -> { where("deleted_at IS NOT NULL") }
-  scope :daily_activity_email_recipients, -> { where(subscribed_to_daily_activity_email: true) }
   scope :subscribed_to_missed_yesterday_email, -> { where(subscribed_to_missed_yesterday_email: true) }
   scope :sorted_by_name, -> { order("lower(name)") }
   scope :admins, -> { where(is_admin: true) }
@@ -238,7 +238,7 @@ class User < ActiveRecord::Base
 
   def deactivate!
     update_attributes(deleted_at: Time.now,
-                      subscribed_to_daily_activity_email: false,
+                      subscribed_to_missed_yesterday_email: false,
                       subscribed_to_mention_notifications: false,
                       subscribed_to_proposal_closure_notifications: false)
     memberships.update_all(archived_at: Time.now,
